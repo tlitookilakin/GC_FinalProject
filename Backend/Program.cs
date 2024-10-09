@@ -1,4 +1,6 @@
 
+using FinalProjectBackend.Services;
+
 namespace FinalProjectBackend
 {
 	public class Program
@@ -7,9 +9,25 @@ namespace FinalProjectBackend
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
+            // CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        //replace localhost with yours
+                        //also add your deployed website
+                        policy.WithOrigins("http://localhost:4200",
+                                           "https://dinosaur-lore-store.com")
+                            .AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
 
-			builder.Services.AddControllers();
+
+            // Add services to the container.
+			builder.Services.AddHttpClient<OpenFoodService>();
+
+            builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
@@ -30,7 +48,10 @@ namespace FinalProjectBackend
 
 			app.MapControllers();
 
-			app.Run();
+            // CORS
+            app.UseCors();
+
+            app.Run();
 		}
 	}
 }

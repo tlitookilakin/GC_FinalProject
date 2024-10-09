@@ -45,7 +45,7 @@ public class Product
 	public string image_url { get; set; }
 	public Dictionary<string, ImageDefinition> images { get; set; }
 	public Ingredient[] ingredients { get; set; }
-	public Dictionary<string ,string> ingredients_analysis { get; set; }
+	public Dictionary<string ,object> ingredients_analysis { get; set; }
 	public string[] ingredients_analysis_tags { get; set; }
 	public string[] ingredients_hierarchy { get; set; }
 	public string[] ingredients_tags { get; set; }
@@ -58,7 +58,7 @@ public class Product
 	public string[] misc_tags { get; set; }
 	public string no_nutrition_data { get; set; }
 	public Dictionary<string, string> nutrient_levels { get; set; }
-	public Dictionary<string, float> nutriments { get; set; }
+	public Dictionary<string, object> nutriments { get; set; }
 	public string nutrition_data { get; set; }
 	public string nutrition_data_per { get; set; }
 	public string nutrition_data_prepared { get; set; }
@@ -66,8 +66,8 @@ public class Product
 	public string obsolete { get; set; }
 	public object[] other_nutritional_substances_tags { get; set; }
 	public string product_name { get; set; }
-	public string product_quantity { get; set; }
-	public string serving_quantity { get; set; }
+	public float product_quantity { get; set; }
+	public float serving_quantity { get; set; }
 	public string serving_size { get; set; }
 	public int sortkey { get; set; }
 	public string stores { get; set; }
@@ -85,7 +85,6 @@ public class Product
 public class ImageDefinition
 {
 	public Dictionary<string, Point> sizes { get; set; }
-	public string uploaded_t { get; set; }
 	public string uploader { get; set; }
 }
 
@@ -93,12 +92,12 @@ public class Ingredient
 {
 	public string id { get; set; }
 	public float percent_estimate { get; set; }
-	public int percent_max { get; set; }
-	public int percent_min { get; set; }
+	public float percent_max { get; set; }
+	public float percent_min { get; set; }
 	public string text { get; set; }
 	public string vegan { get; set; }
 	public string vegetarian { get; set; }
 	public string from_palm_oil { get; set; }
-	public int percent { get; set; }
+	public float percent { get; set; }
 	public Ingredient[] ingredients { get; set; }
 }
