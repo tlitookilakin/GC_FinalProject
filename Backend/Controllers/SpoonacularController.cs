@@ -15,9 +15,16 @@ public class SpoonacularController : Controller
       this.spoonacularService = spoonacularService;
    }
 
-   [HttpGet("{food}")]
+   [HttpGet("search/{food}")]
    public async Task<IActionResult> GetFoodResults(string food)
    {
       return Ok(await spoonacularService.GetResults(food)); 
    }
+
+   [HttpGet("ingredient/{id}")]
+   public async Task<IActionResult> GetSpecificFood(string id, float amount = 0, string? unit = null)
+    {
+        return Ok(await spoonacularService.GetIngredient(id, amount == 0 ? float.NaN : amount, unit));
+    }
+
 }
