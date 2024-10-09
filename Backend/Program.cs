@@ -26,6 +26,7 @@ namespace FinalProjectBackend
 
             // Add services to the container.
 			builder.Services.AddHttpClient<SpoonacularService>();
+			builder.Configuration.AddJsonFile("secrets.json", true);
 
             builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
