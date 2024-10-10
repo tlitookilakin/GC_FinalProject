@@ -22,9 +22,9 @@ public class SpoonacularController : Controller
    }
 
    [HttpGet("ingredient/{id}")]
-   public async Task<IActionResult> GetSpecificFood(string id, float amount = 0, string? unit = null)
+   public async Task<IActionResult> GetSpecificFood(string id, float amount, string unit)
     {
-        return Ok(await spoonacularService.GetIngredient(id, amount == 0 ? float.NaN : amount, unit));
+        return Ok(await spoonacularService.GetIngredient(id, amount, unit));
     }
 
 }

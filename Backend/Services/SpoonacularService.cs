@@ -26,4 +26,12 @@ public class SpoonacularService
 
         return client.GetFromJsonAsync<IngredientInfo>($"food/ingredients/{id}/information?apiKey={config["apiKey"]}");
     }
+    public Task<IngredientInfo[]> ParseIngredient(IList <string> strings, float serving)
+    {
+        string ingredientList = string.Join('\n', strings);
+        ingredientList = Uri.EscapeDataString(ingredientList);
+        return client.GetFromJsonAsync<IngredientInfo[]>($"food/recipes/parseIngredients?servings=1&includeNutrition=true&language=en&ingredientList={ingredientList}");
+
+    }
 }
+
