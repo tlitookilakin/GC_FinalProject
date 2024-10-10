@@ -20,7 +20,7 @@ namespace FinalProjectBackend
                         //replace localhost with yours
                         //also add your deployed website
                         policy.WithOrigins("http://localhost:4200",
-                                           "https://dinosaur-lore-store.com")
+                                           "https://witty-field-0d4fcb20f.5.azurestaticapps.net")
                             .AllowAnyMethod().AllowAnyHeader();
                     });
             });
