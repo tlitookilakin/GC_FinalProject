@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace FinalProjectBackend.Models;
 
@@ -16,6 +15,8 @@ public partial class RecipeIngredient
     public double? Amount { get; set; }
 
     public string? Unit { get; set; }
+
+    [JsonIgnore]
 
     public virtual Recipe? Recipe { get; set; }
 }

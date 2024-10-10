@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace FinalProjectBackend.Models;
 
@@ -13,5 +12,6 @@ public partial class Recipe
 
     public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
 
+    [JsonIgnore]
     public virtual User? User { get; set; }
 }
