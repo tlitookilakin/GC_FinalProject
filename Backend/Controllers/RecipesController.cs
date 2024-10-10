@@ -1,5 +1,6 @@
 ﻿using FinalProjectBackend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinalProjectBackend.Controllers
 {
@@ -11,16 +12,19 @@ namespace FinalProjectBackend.Controllers
 		public IActionResult GetAll(int userID = 0)
 		{
 			if (userID != 0)
-				return Ok(context.Recipes.Where(recipe => recipe.UserId == userID));
+				return Ok(context.Recipes.Where(recipe => recipe.UserId == userID).Include(recipe => recipe.RecipeIngredients));
 
-			return Ok(context.Recipes);
+			return Ok(context.Recipes.Include(recipe => recipe.RecipeIngredients));
 		}
 
 		[HttpGet("{id}")]
 		public IActionResult Get(int id)
 		{
 			if (context.Recipes.Find(id) is Recipe recipe)
+			{
+				context.Entry(recipe).Collection(recipe => recipe.RecipeIngredients).Load();
 				return Ok(recipe);
+			}
 
 			return NotFound();
 		}

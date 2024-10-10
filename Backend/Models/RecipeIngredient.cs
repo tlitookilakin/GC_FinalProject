@@ -6,6 +6,7 @@ public partial class RecipeIngredient
 {
     public int Id { get; set; }
 
+    [JsonIgnore]
     public int? RecipeId { get; set; }
 
     public int ProductId { get; set; }
