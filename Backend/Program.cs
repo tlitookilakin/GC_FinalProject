@@ -1,5 +1,7 @@
 
+using FinalProjectBackend.Models;
 using FinalProjectBackend.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinalProjectBackend
 {
@@ -26,6 +28,8 @@ namespace FinalProjectBackend
 
             // Add services to the container.
 			builder.Services.AddHttpClient<SpoonacularService>();
+			builder.Services.AddDbContext<FinalProjectDbContext>(
+				options => options.UseSqlServer("name=connection"));
 			builder.Configuration.AddJsonFile("secrets.json", true);
 
             builder.Services.AddControllers();
@@ -45,7 +49,6 @@ namespace FinalProjectBackend
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
-
 
 			app.MapControllers();
 

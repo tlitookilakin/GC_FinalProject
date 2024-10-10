@@ -15,6 +15,7 @@ public partial class FinalProjectDbContext : DbContext
         : base(options)
     {
         this.configuration = config;
+        Console.WriteLine(config["connection"]);
     }
 
     public virtual DbSet<Recipe> Recipes { get; set; }

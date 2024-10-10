@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace FinalProjectBackend.Models;
 
@@ -19,5 +20,6 @@ public partial class User
 
     public bool? Vegetarian { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
 }
