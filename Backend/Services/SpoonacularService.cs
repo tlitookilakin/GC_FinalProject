@@ -19,9 +19,9 @@ public class SpoonacularService
         return client.GetFromJsonAsync<SearchResults>($"food/ingredients/search?apiKey={config["apiKey"]}&query={food}");
     }
 
-    public Task<IngredientInfo?> GetIngredient(string id, float amount = float.NaN, string? unit = null)
+    public Task<IngredientInfo?> GetIngredient(string id, float amount = 0f, string? unit = null)
     {
-        if (!float.IsNaN(amount) && unit != null)
+        if (amount != 0 && unit != null)
             return client.GetFromJsonAsync<IngredientInfo>($"food/ingredients/{id}/information?amount={amount}&unit={unit}&apiKey={config["apiKey"]}");
 
         return client.GetFromJsonAsync<IngredientInfo>($"food/ingredients/{id}/information?apiKey={config["apiKey"]}");

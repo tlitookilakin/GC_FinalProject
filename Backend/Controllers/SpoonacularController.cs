@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FinalProjectBackend.Controllers;
 
-[Route("api/[controller]")]
+[Route("api")]
 [ApiController]
 
 public class SpoonacularController : Controller
@@ -22,7 +22,7 @@ public class SpoonacularController : Controller
    }
 
    [HttpGet("ingredient/{id}")]
-   public async Task<IActionResult> GetSpecificFood(string id, float amount, string unit)
+   public async Task<IActionResult> GetSpecificFood(string id, float amount =0f, string unit = null)
     {
         return Ok(await spoonacularService.GetIngredient(id, amount, unit));
     }
