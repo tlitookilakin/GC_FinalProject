@@ -1,6 +1,8 @@
 
 using FinalProjectBackend.Models;
 using FinalProjectBackend.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinalProjectBackend
@@ -11,8 +13,10 @@ namespace FinalProjectBackend
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-            // CORS
-            builder.Services.AddCors(options =>
+			builder.Configuration.AddJsonFile("secrets.json", true);
+
+			// CORS
+			builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
                     policy =>
@@ -28,14 +32,19 @@ namespace FinalProjectBackend
 
             // Add services to the container.
 			builder.Services.AddHttpClient<SpoonacularService>();
+			builder.Services.AddDbContext<LoginContext>(
+				options => options.UseSqlServer("name=loginConnection")
+			);
 			builder.Services.AddDbContext<FinalProjectDbContext>(
 				options => options.UseSqlServer("name=connection"));
-			builder.Configuration.AddJsonFile("secrets.json", true);
 
             builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+			builder.Services.AddAuthorization();
+			builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+				.AddEntityFrameworkStores<LoginContext>();
 
 			var app = builder.Build();
 
@@ -51,9 +60,10 @@ namespace FinalProjectBackend
 			app.UseAuthorization();
 
 			app.MapControllers();
+			app.MapGroup("/api/user").MapIdentityApi<IdentityUser>();
 
-            // CORS
-            app.UseCors();
+			// CORS
+			app.UseCors();
 
             app.Run();
 		}
