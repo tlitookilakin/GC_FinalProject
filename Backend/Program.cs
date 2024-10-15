@@ -2,7 +2,6 @@
 using FinalProjectBackend.Models;
 using FinalProjectBackend.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinalProjectBackend
@@ -17,20 +16,20 @@ namespace FinalProjectBackend
 
 			// CORS
 			builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    policy =>
-                    {
-                        //replace localhost with yours
-                        //also add your deployed website
-                        policy.WithOrigins("http://localhost:4200",
-                                           "https://witty-field-0d4fcb20f.5.azurestaticapps.net")
-                            .AllowAnyMethod().AllowAnyHeader();
-                    });
-            });
+			{
+				options.AddDefaultPolicy(
+					policy =>
+					{
+						//replace localhost with yours
+						//also add your deployed website
+						policy.WithOrigins("http://localhost:4200",
+										   "https://witty-field-0d4fcb20f.5.azurestaticapps.net")
+							.AllowAnyMethod().AllowAnyHeader();
+					});
+			});
 
 
-            // Add services to the container.
+			// Add services to the container.
 			builder.Services.AddHttpClient<SpoonacularService>();
 			builder.Services.AddDbContext<LoginContext>(
 				options => options.UseSqlServer("name=loginConnection")
@@ -38,11 +37,14 @@ namespace FinalProjectBackend
 			builder.Services.AddDbContext<FinalProjectDbContext>(
 				options => options.UseSqlServer("name=connection"));
 
-            builder.Services.AddControllers();
+			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-			builder.Services.AddAuthorization();
+			builder.Services.AddAuthorization()
+				.AddCookiePolicy(options => {
+					options.OnAppendCookie += cookie => cookie.CookieOptions.HttpOnly = false;
+				});
 			builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 				.AddEntityFrameworkStores<LoginContext>();
 
@@ -58,6 +60,7 @@ namespace FinalProjectBackend
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
+			app.UseCookiePolicy();
 
 			app.MapControllers();
 			app.MapGroup("/api/user").MapIdentityApi<IdentityUser>();
@@ -65,7 +68,7 @@ namespace FinalProjectBackend
 			// CORS
 			app.UseCors();
 
-            app.Run();
+			app.Run();
 		}
 	}
 }
