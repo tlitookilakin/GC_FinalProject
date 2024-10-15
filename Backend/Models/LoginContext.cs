@@ -6,5 +6,12 @@ namespace FinalProjectBackend.Models
 {
 	public class LoginContext : IdentityDbContext<IdentityUser>
 	{
+		public LoginContext()
+		{
+		}
+
+		public LoginContext(DbContextOptions<LoginContext> options) : base(options)
+		{
+		}
 	}
 }
