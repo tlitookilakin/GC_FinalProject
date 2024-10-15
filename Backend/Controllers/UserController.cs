@@ -25,7 +25,7 @@ public class UserController : Controller
     [HttpPost()]
     public IActionResult CreateAccount([FromBody] User user)
     {
-        user.Id = 0;
+        user.Id = "";
         dbContext.Users.Add(user);
         dbContext.SaveChanges();
         return Created($"/api/User/{user.Id}", user);
@@ -44,7 +44,7 @@ public class UserController : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateUser(int id, [FromBody] User user)
+    public IActionResult UpdateUser(string id, [FromBody] User user)
     {
         if (user.Id != id)
         {

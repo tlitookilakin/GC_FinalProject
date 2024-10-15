@@ -9,9 +9,9 @@ namespace FinalProjectBackend.Controllers
 	public class RecipesController(FinalProjectDbContext context) : ControllerBase
 	{
 		[HttpGet()]
-		public IActionResult GetAll(int userID = 0)
+		public IActionResult GetAll(string userID = "")
 		{
-			if (userID != 0)
+			if (userID.Length != 0)
 				return Ok(context.Recipes.Where(recipe => recipe.UserId == userID).Include(recipe => recipe.RecipeIngredients));
 
 			return Ok(context.Recipes.Include(recipe => recipe.RecipeIngredients));
