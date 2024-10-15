@@ -1,4 +1,6 @@
 using FinalProjectBackend.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinalProjectBackend.Controllers;
@@ -15,46 +17,27 @@ public class UserController : Controller
         this.dbContext = dbContext;
     }
 
-    [HttpGet()]
-    public IActionResult GetUserLogin(string name)
+    [Authorize]
+    [HttpGet]
+    public IActionResult GetUser()
     {
-        User userInfo = dbContext.Users.FirstOrDefault(user => user.Name == name);
-        return Ok(userInfo);
+		IdentityUser identity = (IdentityUser)User.Identity!;
+
+		if (dbContext.Users.Find(identity.Id) is User user)
+			return Ok(user);
+
+		user = new() { Id = identity.Id, Name = identity.NormalizedUserName };
+		dbContext.Users.Add(user);
+		dbContext.SaveChanges();
+		return Ok(user);
     }
 
-    [HttpPost()]
-    public IActionResult CreateAccount([FromBody] User user)
+    [Authorize]
+    [HttpPut]
+    public IActionResult UpdateUser([FromBody] User user)
     {
-        user.Id = "";
-        dbContext.Users.Add(user);
-        dbContext.SaveChanges();
-        return Created($"/api/User/{user.Id}", user);
-    }
-
-    [HttpGet("{id}")]
-    public IActionResult GetById(int id)
-    {
-        User userInfo = dbContext.Users.Find(id);
-        if (userInfo == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(userInfo); 
-    }
-
-    [HttpPut("{id}")]
-    public IActionResult UpdateUser(string id, [FromBody] User user)
-    {
-        if (user.Id != id)
-        {
+        if (user.Id != ((IdentityUser)User.Identity!).Id)
             return BadRequest();
-        }
-
-        if (!dbContext.Users.Any(user => user.Id == id))
-        {
-            return NotFound();
-        }
 
         dbContext.Users.Update(user);
         dbContext.SaveChanges();
