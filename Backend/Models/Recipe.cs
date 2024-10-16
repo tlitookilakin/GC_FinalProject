@@ -9,6 +9,7 @@ public partial class Recipe
     public string? Name { get; set; }
 
     public string? UserId { get; set; }
+    public int Servings { get; set; }
 
     public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
 
