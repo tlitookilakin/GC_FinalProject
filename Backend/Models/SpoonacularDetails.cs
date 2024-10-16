@@ -25,7 +25,6 @@ public class IngredientInfo
 	public string unitShort { get; set; }
 	public string unitLong { get; set; }
 	public string[] possibleUnits { get; set; }
-	public Estimatedcost estimatedCost { get; set; }
 	public string consistency { get; set; }
 	public string[] shoppingListUnits { get; set; }
 	public string aisle { get; set; }
@@ -35,11 +34,7 @@ public class IngredientInfo
 	public string[] categoryPath { get; set; }
 }
 
-public class Estimatedcost
-{
-	public float value { get; set; }
-	public string unit { get; set; }
-}
+
 
 public class Nutrition
 {
