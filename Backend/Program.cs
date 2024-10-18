@@ -41,10 +41,7 @@ namespace FinalProjectBackend
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
-			builder.Services.AddAuthorization()
-				.AddCookiePolicy(options => {
-					options.OnAppendCookie += cookie => cookie.CookieOptions.HttpOnly = false;
-				});
+			builder.Services.AddCookiePolicy(policy => policy.Secure = CookieSecurePolicy.SameAsRequest).AddAuthorization();
 			builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 				.AddEntityFrameworkStores<LoginContext>();
 
