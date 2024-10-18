@@ -8,25 +8,22 @@ namespace FinalProjectBackend.Controllers;
 
 public class SpoonacularController : Controller
 {
-   private readonly SpoonacularService spoonacularService;
+	private readonly SpoonacularService spoonacularService;
 
-   public SpoonacularController(SpoonacularService spoonacularService)
-   {
-      this.spoonacularService = spoonacularService;
-   }
+	public SpoonacularController(SpoonacularService spoonacularService)
+	{
+		this.spoonacularService = spoonacularService;
+	}
 
-   [HttpGet("search/{food}")]
-   public async Task<IActionResult> GetFoodResults(string food)
-   {
-      return Ok(await spoonacularService.GetResults(food)); 
-   }
+	[HttpGet("search/{food}")]
+	public async Task<IActionResult> GetFoodResults(string food)
+	{
+		return Ok(await spoonacularService.GetResults(food)); 
+	}
 
-   [HttpGet("ingredient/{id}")]
-   public async Task<IActionResult> GetSpecificFood(string id, float amount =0f, string unit = null)
-    {
-        return Ok(await spoonacularService.GetIngredient(id, amount, unit));
-    }
-   
-   
-
+	[HttpGet("ingredient/{id}")]
+	public async Task<IActionResult> GetSpecificFood(string id, float amount = 0f, string? unit = null)
+	{
+		return Ok(await spoonacularService.GetIngredient(id, amount, unit));
+	}
 }

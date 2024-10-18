@@ -36,7 +36,7 @@ public class UserController : Controller
     [HttpPut]
     public IActionResult UpdateUser([FromBody] User user)
     {
-        if (user.Id != ((IdentityUser)User.Identity!).Id)
+        if (user.Id != User.Identity.GetId())
             return BadRequest();
 
         dbContext.Users.Update(user);

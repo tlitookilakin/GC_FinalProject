@@ -1,4 +1,5 @@
 ﻿using FinalProjectBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +9,12 @@ namespace FinalProjectBackend.Controllers
 	[ApiController]
 	public class RecipesController(FinalProjectDbContext context) : ControllerBase
 	{
+		[Authorize]
 		[HttpGet()]
-		public IActionResult GetAll(string userID = "")
+		public IActionResult GetAll()
 		{
-			if (userID.Length != 0)
-				return Ok(context.Recipes.Where(recipe => recipe.UserId == userID).Include(recipe => recipe.RecipeIngredients));
-
-			return Ok(context.Recipes.Include(recipe => recipe.RecipeIngredients));
+			string userID = User.Identity.GetId();
+			return Ok(context.Recipes.Where(recipe => recipe.UserId == userID).Include(recipe => recipe.RecipeIngredients));
 		}
 
 		[HttpGet("{id}")]
@@ -29,6 +29,7 @@ namespace FinalProjectBackend.Controllers
 			return NotFound();
 		}
 
+		[Authorize]
 		[HttpPost]
 		public IActionResult Post([FromBody] Recipe recipe)
 		{
@@ -38,16 +39,21 @@ namespace FinalProjectBackend.Controllers
 				ingredient.RecipeId = 0;
 				ingredient.Id = 0;
 			}
+			recipe.UserId = User.Identity.GetId();
 			context.Recipes.Add(recipe);
 			context.SaveChanges();
 			return Created($"api/recipes/{recipe.Id}", recipe);
 		}
 
+		[Authorize]
 		[HttpPut("{id}")]
 		public IActionResult Put(int id, [FromBody] Recipe recipe)
 		{
 			if (id != recipe.Id)
 				return BadRequest("Id does not match");
+
+			if (recipe.UserId != User.Identity.GetId())
+				return BadRequest("Recipe not owned by user");
 
 			if (context.Recipes.FirstOrDefault(recipe => recipe.Id == id) is Recipe old)
 			{
@@ -77,11 +83,15 @@ namespace FinalProjectBackend.Controllers
 			return NotFound();
 		}
 
+		[Authorize]
 		[HttpDelete("{id}")]
 		public IActionResult Delete(int id)
 		{
 			if (context.Recipes.Find(id) is Recipe recipe)
 			{
+				if (recipe.UserId != User.Identity.GetId())
+					return BadRequest("Recipe not owned by user");
+
 				context.Recipes.Remove(recipe);
 				context.SaveChanges();
 				return NoContent();
