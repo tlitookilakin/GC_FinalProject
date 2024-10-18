@@ -24,7 +24,7 @@ namespace FinalProjectBackend
 						//also add your deployed website
 						policy.WithOrigins("http://localhost:4200",
 										   "https://witty-field-0d4fcb20f.5.azurestaticapps.net")
-							.AllowAnyMethod().AllowAnyHeader();
+							.AllowAnyMethod().AllowAnyHeader().AllowCredentials();
 					});
 			});
 
@@ -58,15 +58,14 @@ namespace FinalProjectBackend
 			}
 
 			app.UseHttpsRedirection();
-
-			app.UseAuthorization();
 			app.UseCookiePolicy();
 
 			app.MapControllers();
-			app.MapGroup("/api/user").MapIdentityApi<IdentityUser>();
+			app.MapGroup("/api/user").RequireCors().MapIdentityApi<IdentityUser>();
 
 			// CORS
 			app.UseCors();
+			app.UseAuthorization();
 
 			app.Run();
 		}
