@@ -21,15 +21,7 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult GetUser()
     {
-		IdentityUser identity = (IdentityUser)User.Identity!;
-
-		if (dbContext.Users.Find(identity.Id) is User user)
-			return Ok(user);
-
-		user = new() { Id = identity.Id, Name = identity.NormalizedUserName };
-		dbContext.Users.Add(user);
-		dbContext.SaveChanges();
-		return Ok(user);
+		return Ok(dbContext.CreateUserIfAbsent(User.Identity.GetId()));
     }
 
     [Authorize]

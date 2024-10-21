@@ -40,6 +40,7 @@ namespace FinalProjectBackend.Controllers
 				ingredient.Id = 0;
 			}
 			recipe.UserId = User.Identity.GetId();
+			context.CreateUserIfAbsent(recipe.UserId);
 			context.Recipes.Add(recipe);
 			context.SaveChanges();
 			return Created($"api/recipes/{recipe.Id}", recipe);
@@ -57,6 +58,7 @@ namespace FinalProjectBackend.Controllers
 
 			if (context.Recipes.FirstOrDefault(recipe => recipe.Id == id) is Recipe old)
 			{
+				context.CreateUserIfAbsent(recipe.UserId);
 				List<int> knownIds = [];
 
 				foreach (RecipeIngredient ingredient in recipe.RecipeIngredients)
