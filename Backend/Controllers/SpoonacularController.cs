@@ -26,4 +26,11 @@ public class SpoonacularController : Controller
 	{
 		return Ok(await spoonacularService.GetIngredient(id, amount, unit));
 	}
+
+	[HttpGet("complexSearch")]
+	public async Task<IActionResult> GetSpecificRecipe(string? diet = null, string? intolerances = null,
+		float amount = 100f)
+	{
+		return Ok(await spoonacularService.FindRecipes(diet, intolerances, amount));
+	}
 }

@@ -14,6 +14,22 @@ public class Results
 	public string name { get; set; }
 	public string image { get; set; }
 }
+
+public class RecipeResults
+{
+	public int id { get; set; }
+	public string title { get; set; }
+	public string image { get; set; }
+}
+
+public class RecipeSearchResults
+{
+	public RecipeResults[] results { get; set; }
+	public int offset { get; set; }
+	public int number { get; set; }
+	public int totalResults { get; set; }
+}
+
 public class IngredientInfo
 {
 	public int id { get; set; }
@@ -33,8 +49,6 @@ public class IngredientInfo
 	public Nutrition nutrition { get; set; }
 	public string[] categoryPath { get; set; }
 }
-
-
 
 public class Nutrition
 {
@@ -59,3 +73,6 @@ public class Nutrient
 	public string unit { get; set; }
 	public float percentOfDailyNeeds { get; set; }
 }
+
+
+
