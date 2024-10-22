@@ -20,6 +20,9 @@ public partial class User
 
     public bool? Vegetarian { get; set; }
 
+    public float? CarbRatio { get; set; }
+    public float? CorrectionFactor { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
 }
