@@ -44,7 +44,8 @@ namespace FinalProjectBackend
 			builder.Services.AddAuthorization().AddCookiePolicy(options =>
 			{
 				options.OnAppendCookie += policy => {
-					policy.CookieOptions.Secure = false;
+					policy.CookieOptions.Secure = true;
+					policy.CookieOptions.SameSite = SameSiteMode.None;
 					policy.CookieOptions.HttpOnly = false;
 				};
 			});
