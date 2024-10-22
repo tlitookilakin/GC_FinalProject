@@ -89,7 +89,7 @@ namespace FinalProjectBackend.Controllers
 		[HttpDelete("{id}")]
 		public IActionResult Delete(int id)
 		{
-			if (context.Recipes.Find(id) is Recipe recipe)
+			if (context.Recipes.Include(nameof(Recipe.RecipeIngredients)).FirstOrDefault(r => r.Id == id) is Recipe recipe)
 			{
 				if (recipe.UserId != User.Identity.GetId())
 					return BadRequest("Recipe not owned by user");
