@@ -51,6 +51,23 @@ namespace FinalProjectBackend.Controllers
 		}
 
 		[Authorize]
+		[HttpPost("reorder")]
+		public IActionResult ReorderRecipes([FromBody] Dictionary<string, int> priorities)
+		{
+            foreach (var (key, value) in priorities)
+            {
+				if (int.TryParse(key, out int id) && context.Recipes.Find(id) is Recipe recipe)
+				{
+					recipe.Priority = value;
+					context.Recipes.Update(recipe);
+				}
+            }
+
+			context.SaveChanges();
+			return Ok();
+        }
+
+		[Authorize]
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromBody] Recipe recipe)
 		{
@@ -60,7 +77,7 @@ namespace FinalProjectBackend.Controllers
 			if (recipe.UserId != User.Identity.GetId())
 				return BadRequest("Recipe not owned by user");
 
-			if (context.Recipes.FirstOrDefault(recipe => recipe.Id == id) is Recipe old)
+			if (context.Recipes.AsNoTracking().FirstOrDefault(recipe => recipe.Id == id) is Recipe old)
 			{
 				context.CreateUserIfAbsent(recipe.UserId);
 				List<int> knownIds = [];
