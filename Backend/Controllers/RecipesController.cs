@@ -1,4 +1,5 @@
 ﻿using FinalProjectBackend.Models;
+using FinalProjectBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ namespace FinalProjectBackend.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class RecipesController(FinalProjectDbContext context) : ControllerBase
+	public class RecipesController(FinalProjectDbContext context, SpoonacularService spoon) : ControllerBase
 	{
 		[Authorize]
 		[HttpGet()]
@@ -31,7 +32,7 @@ namespace FinalProjectBackend.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public IActionResult Post([FromBody] Recipe recipe)
+		public async Task<IActionResult> Post([FromBody] Recipe recipe)
 		{
 			recipe.Id = 0;
 			foreach (RecipeIngredient ingredient in recipe.RecipeIngredients)
@@ -41,6 +42,9 @@ namespace FinalProjectBackend.Controllers
 			}
 			recipe.UserId = User.Identity.GetId();
 			context.CreateUserIfAbsent(recipe.UserId);
+
+			await CalculateIngredients(recipe);
+
 			context.Recipes.Add(recipe);
 			context.SaveChanges();
 			return Created($"api/recipes/{recipe.Id}", recipe);
@@ -48,7 +52,7 @@ namespace FinalProjectBackend.Controllers
 
 		[Authorize]
 		[HttpPut("{id}")]
-		public IActionResult Put(int id, [FromBody] Recipe recipe)
+		public async Task<IActionResult> Put(int id, [FromBody] Recipe recipe)
 		{
 			if (id != recipe.Id)
 				return BadRequest("Id does not match");
@@ -77,6 +81,8 @@ namespace FinalProjectBackend.Controllers
 
 				context.RecipeIngredients.RemoveRange(toRemove);
 
+				await CalculateIngredients(recipe);
+
 				context.Recipes.Update(recipe);
 				context.SaveChanges();
 				return Ok(recipe);
@@ -100,6 +106,19 @@ namespace FinalProjectBackend.Controllers
 			}
 
 			return NotFound();
+		}
+
+		private async Task CalculateIngredients(Recipe recipe)
+		{
+			var details = await spoon.GetAllIngredients(recipe.RecipeIngredients);
+
+			recipe.Calories = (int)details.Sum(i => i is null ? 0 : i.nutrition.nutrients.First(
+				n => n.name.Equals("calories", StringComparison.OrdinalIgnoreCase)
+			).amount);
+
+			recipe.Carbs = (int)details.Sum(i => i is null ? 0 : i.nutrition.nutrients.First(
+				n => n.name.Equals("carbohydrates", StringComparison.OrdinalIgnoreCase)
+			).amount);
 		}
 	}
 }

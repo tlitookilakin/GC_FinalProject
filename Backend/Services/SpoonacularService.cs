@@ -37,5 +37,10 @@ public class SpoonacularService
     {
         return client.GetFromJsonAsync<RecipeSearchResults>($"recipes/complexSearch?apiKey={config["apiKey"]}&number={number}&diet={diet}&intolerances={intolerances}");
     }
+
+    public Task<IngredientInfo?[]> GetAllIngredients(IEnumerable<RecipeIngredient> ingredients)
+    {
+        return Task.WhenAll(ingredients.Select(i => GetIngredient(Convert.ToString(i.ProductId), (float)(i.Amount ?? 0.0), i.Unit)));
+    }
 }
 
